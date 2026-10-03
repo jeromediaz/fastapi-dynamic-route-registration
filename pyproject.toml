@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=77.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.package-data]
+"fastapi_dynamic_route_registration" = ["py.typed"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project]
+name = "fastapi-dynamic-route-registration"
+version = "0.1.0"
+authors = [
+  { name="Jérôme DIAZ", email="jerome_diaz@me.com" },
+]
+description = "A library to help dynamically register routes in FastAPI applications."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.12"
+classifiers = [
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+    "Framework :: FastAPI",
+    "Typing :: Typed",
+]
+keywords = ["fastapi", "route", "dynamic"]
+dependencies = [
+    "fastapi>=0.100.0",
+    "typing-extensions>=4.0.0",
+]
+
+[project.optional-dependencies]
+dev = ["black", "pytest", "ruff", "mypy", "httpx"]
+
+[project.urls]
+"Homepage" = "https://github.com/jeromediaz/fastapi-dynamic-route-registration"
+"Bug Tracker" = "https://github.com/jeromediaz/fastapi-dynamic-route-registration/issues"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.black]
+line-length = 88
+target-version = ["py312"]
