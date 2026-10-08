@@ -12,15 +12,19 @@ a full host application.  They verify that:
 """
 
 import pytest
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from fastapi_dynamic_route_registration import register_route, register_router, register_routers
-
+from fastapi_dynamic_route_registration import (
+    register_route,
+    register_router,
+    register_routers,
+)
 
 # ---------------------------------------------------------------------------
 # Inline endpoint module (simulates an endpoint package __init__.py)
 # ---------------------------------------------------------------------------
+
 
 @register_route("", methods=["GET"])
 def health(*, version: int = 1, **kwargs) -> dict:
@@ -37,7 +41,9 @@ def secret_route() -> dict:  # pragma: no cover
     return {}
 
 
-@register_route("/flag", methods=["GET"], enabled=lambda **p: p.get("enable_flag", False))
+@register_route(
+    "/flag", methods=["GET"], enabled=lambda **p: p.get("enable_flag", False)
+)
 def flag_route() -> dict:
     return {"flag": True}
 
@@ -45,6 +51,7 @@ def flag_route() -> dict:
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _make_app(routers_data, route_kwargs=None) -> TestClient:
     app = FastAPI()
@@ -55,6 +62,7 @@ def _make_app(routers_data, route_kwargs=None) -> TestClient:
 # ---------------------------------------------------------------------------
 # register_router tests
 # ---------------------------------------------------------------------------
+
 
 class TestRegisterRouter:
     def test_basic_prefix_as_string(self):
@@ -70,15 +78,21 @@ class TestRegisterRouter:
         assert client.get("/v1/secret").status_code == 404
 
     def test_param_overrides_default(self):
-        client = _make_app({"router_kwargs": {"prefix": "/v2"}, "params": {"version": 2}})
+        client = _make_app(
+            {"router_kwargs": {"prefix": "/v2"}, "params": {"version": 2}}
+        )
         assert client.get("/v2").json() == {"status": "OK", "version": 2}
 
     def test_conditional_enabled(self):
-        client = _make_app({"router_kwargs": {"prefix": "/v1"}, "params": {"enable_flag": True}})
+        client = _make_app(
+            {"router_kwargs": {"prefix": "/v1"}, "params": {"enable_flag": True}}
+        )
         assert client.get("/v1/flag").status_code == 200
 
     def test_conditional_disabled(self):
-        client = _make_app({"router_kwargs": {"prefix": "/v1"}, "params": {"enable_flag": False}})
+        client = _make_app(
+            {"router_kwargs": {"prefix": "/v1"}, "params": {"enable_flag": False}}
+        )
         assert client.get("/v1/flag").status_code == 404
 
     def test_url_prefix_key_accepted(self):
@@ -107,6 +121,7 @@ class TestRegisterRouter:
 # register_routers tests
 # ---------------------------------------------------------------------------
 
+
 class TestRegisterRouters:
     def test_groups_modules_under_parent_router(self):
         current = __name__
@@ -116,7 +131,9 @@ class TestRegisterRouters:
 
         prefix, suffix = parts
         app = FastAPI()
-        register_routers(app, module_prefix=prefix, routers={suffix: "/grp"}, route_kwargs={})
+        register_routers(
+            app, module_prefix=prefix, routers={suffix: "/grp"}, route_kwargs={}
+        )
         client = TestClient(app)
         assert client.get("/grp").status_code == 200
 

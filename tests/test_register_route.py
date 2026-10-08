@@ -1,16 +1,19 @@
 """Tests for register_route decorator and register_router / register_routers."""
 
-import pytest
-from fastapi import APIRouter, FastAPI
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from fastapi_dynamic_route_registration import register_route, register_router, register_routers
+from fastapi_dynamic_route_registration import (
+    register_route,
+    register_router,
+    register_routers,
+)
 from fastapi_dynamic_route_registration.router_decorator import is_register_route
-
 
 # ---------------------------------------------------------------------------
 # Helpers / fixture modules defined inline
 # ---------------------------------------------------------------------------
+
 
 @register_route("", methods=["GET"])
 def index_route():
@@ -33,7 +36,9 @@ def disabled_route():  # pragma: no cover
     return {}
 
 
-@register_route("/conditional", methods=["GET"], enabled=lambda **p: p.get("flag", False))
+@register_route(
+    "/conditional", methods=["GET"], enabled=lambda **p: p.get("flag", False)
+)
 def conditional_route():
     return {"ok": True}
 
@@ -53,6 +58,7 @@ def route_with_star_kwargs(item_id: str = "default", **kwargs):
 # Tests: decorator
 # ---------------------------------------------------------------------------
 
+
 class TestRegisterRouteDecorator:
     def test_marks_is_url_rule(self):
         assert index_route.is_url_rule is True
@@ -62,12 +68,14 @@ class TestRegisterRouteDecorator:
 
     def test_is_register_route_predicate_false_for_plain_func(self):
         def plain(): ...
+
         assert not is_register_route(plain)
 
 
 # ---------------------------------------------------------------------------
 # Tests: register_router with a real FastAPI app
 # ---------------------------------------------------------------------------
+
 
 class TestRegisterRouterDirect:
     """register_router using functions defined in this test module."""
@@ -211,8 +219,10 @@ class TestRegisterRouterDirect:
     def test_empty_module_returns_empty_list(self):
         """register_router must return [] when module has no @register_route functions."""
         import types as _types
+
         empty = _types.ModuleType("_empty_test_module")
         import sys
+
         sys.modules["_empty_test_module"] = empty
         try:
             result = register_router(FastAPI(), "_empty_test_module", "/prefix", {})
