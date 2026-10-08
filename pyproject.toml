@@ -33,7 +33,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["black", "pytest", "ruff", "mypy", "httpx"]
+dev = ["pytest", "ruff", "mypy", "httpx"]
 
 [project.urls]
 "Homepage" = "https://github.com/jeromediaz/fastapi-dynamic-route-registration"
@@ -42,6 +42,15 @@ dev = ["black", "pytest", "ruff", "mypy", "httpx"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
-[tool.black]
-line-length = 88
-target-version = ["py312"]
+[tool.ruff]
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "B", "C4", "C9", "I", "PERF", "RUF", "SIM", "UP", "W"]
+ignore = ["E501"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 15
+
+[tool.mypy]
+strict = true

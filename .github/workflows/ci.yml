@@ -19,6 +19,8 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - run: pip install -e ".[dev]"
       - run: pytest -q
+      - run: ruff check .
+      - run: mypy src/fastapi_dynamic_route_registration
 
   build:
     needs: test
