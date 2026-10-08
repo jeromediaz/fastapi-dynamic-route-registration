@@ -33,7 +33,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "ruff", "mypy", "httpx"]
+dev = ["pytest", "ruff", "mypy", "httpx2"]
 
 [project.urls]
 "Homepage" = "https://github.com/jeromediaz/fastapi-dynamic-route-registration"
